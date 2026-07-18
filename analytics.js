@@ -41,11 +41,12 @@ async function run() {
   let totalClicks = 0;
 
   try {
-    // FIX: Added ?domain=ljc.s.gy to the API URL so Short.io knows which domain to check
+    // FIX: Added '/api/' to the URL path. The correct Short.io endpoint is /api/links
     console.log(`Fetching data from Short.io for domain: ${domain}...`);
-    const response = await axios.get(`https://api.short.io/links?domain=${domain}`, {
+    const response = await axios.get(`https://api.short.io/api/links?domain=${domain}`, {
       headers: {
         "Authorization": apiKey,
+        "accept": "application/json",
         "Content-Type": "application/json"
       }
     });
