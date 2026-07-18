@@ -6,7 +6,7 @@ async function run() {
   const apiKey = process.env.SHORTIO_API_KEY;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  const domainName = "ljc.s.gy";
+  const domainName = "ljc.s.gy"; // We will update this once we see the real name
 
   // Your exact Payhip destination URLs
   const linksToTrack = [
@@ -41,8 +41,8 @@ async function run() {
   let totalClicks = 0;
 
   try {
-    // STEP 1: Get the numeric Domain ID from Short.io
-    console.log(`Fetching domain ID for: ${domainName}...`);
+    // STEP 1: Get the list of domains from Short.io
+    console.log(`Fetching domains from Short.io...`);
     const domainResponse = await axios.get('https://api.short.io/api/domains', {
       headers: {
         "Authorization": apiKey,
@@ -51,14 +51,18 @@ async function run() {
     });
 
     const domains = domainResponse.data.domains || [];
+    
+    // DEBUG: Print out EVERY domain this API key can see
+    console.log("🔍 DOMAINS FOUND IN THIS ACCOUNT:", domains.map(d => d.hostname));
+
     const targetDomain = domains.find(d => d.hostname === domainName);
 
     if (!targetDomain) {
-      throw new Error(`Domain ${domainName} not found in your Short.io account.`);
+      throw new Error(`Domain '${domainName}' not found. Please check the 'DOMAINS FOUND' list in the logs above and update the 'domainName' variable in the code.`);
     }
 
     const domainId = targetDomain.id;
-    console.log(`✅ Found domain ID: ${domainId}`);
+    console.log(`✅ Found domain ID for ${domainName}: ${domainId}`);
 
     // STEP 2: Get links using the numeric domain_id
     console.log(`Fetching links for domain ID: ${domainId}...`);
@@ -73,7 +77,6 @@ async function run() {
     console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
 
     for (const target of linksToTrack) {
-      // Find the matching short link by comparing originalUrl
       const matchedLink = allLinks.find(l => l.originalUrl === target.originalUrl);
       
       if (matchedLink) {
