@@ -6,33 +6,34 @@ async function run() {
   const apiKey = process.env.SHORTIO_API_KEY;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
+  const domain = "ljc.s.gy"; // Your Short.io domain
 
-  // UPDATED: Your exact Payhip destination URLs
+  // Your exact Payhip destination URLs
   const linksToTrack = [
     { 
       name: "Weekly Gold Roadmap", 
-      shortUrl: "https://ljc.s.gy/roadmap", // Update this to your actual Short.io link
+      shortUrl: `https://${domain}/roadmap`, 
       originalUrl: "https://payhip.com/b/9Y4Mb" 
     },
     { 
       name: "Gold Trader's Blueprint", 
-      shortUrl: "https://ljc.s.gy/blueprint", 
+      shortUrl: `https://${domain}/blueprint`, 
       originalUrl: "https://payhip.com/b/fteFc" 
     },
     { 
       name: "Mastering Swing Trading", 
-      shortUrl: "https://ljc.s.gy/swing", 
+      shortUrl: `https://${domain}/swing`, 
       originalUrl: "https://payhip.com/b/dGWiO" 
     },
     { 
       name: "Limitless Club Bundle", 
-      shortUrl: "https://ljc.s.gy/bundle", 
+      shortUrl: `https://${domain}/bundle`, 
       originalUrl: "https://payhip.com/b/XsFC7" 
     },
     { 
       name: "Limitless App / Other", 
-      shortUrl: "https://ljc.s.gy/app", 
-      originalUrl: "https://payhip.com/LimitlessJourneysClub" // Update this if your 5th link points somewhere else!
+      shortUrl: `https://${domain}/app`, 
+      originalUrl: "https://payhip.com/LimitlessJourneysClub" 
     }
   ];
 
@@ -40,9 +41,9 @@ async function run() {
   let totalClicks = 0;
 
   try {
-    // Fetch all links and their stats from Short.io
-    console.log("Fetching data from Short.io...");
-    const response = await axios.get('https://api.short.io/links', {
+    // FIX: Added ?domain=ljc.s.gy to the API URL so Short.io knows which domain to check
+    console.log(`Fetching data from Short.io for domain: ${domain}...`);
+    const response = await axios.get(`https://api.short.io/links?domain=${domain}`, {
       headers: {
         "Authorization": apiKey,
         "Content-Type": "application/json"
@@ -50,9 +51,10 @@ async function run() {
     });
 
     const allLinks = response.data.links || [];
+    console.log(`Found ${allLinks.length} links in Short.io account.`);
 
     for (const target of linksToTrack) {
-      // Find the matching short link in the Short.io data by comparing originalUrl
+      // Find the matching short link by comparing originalUrl
       const matchedLink = allLinks.find(l => l.originalUrl === target.originalUrl);
       
       if (matchedLink) {
