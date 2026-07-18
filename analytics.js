@@ -7,13 +7,13 @@ async function run() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  // UPDATED: Your exact 5 Bitly links
+  // UPDATED: Use 'bit.ly/...' format (Official Bitly API v4 standard)
   const linksToTrack = [
-    { name: "Weekly Gold Roadmap", url: "https://bit.ly/LJ-Roadmap" },
-    { name: "Gold Trader's Blueprint", url: "https://bit.ly/LJ-Blueprint" },
-    { name: "Mastering Swing Trading", url: "https://bit.ly/LJ-SwingTrading" },
-    { name: "Limitless Club Bundle", url: "https://bit.ly/458wzTk" },
-    { name: "Limitless App / Other", url: "https://bit.ly/3SVR575" }
+    { name: "Weekly Gold Roadmap", url: "bit.ly/LJ-Roadmap" },
+    { name: "Gold Trader's Blueprint", url: "bit.ly/LJ-Blueprint" },
+    { name: "Mastering Swing Trading", url: "bit.ly/LJ-SwingTrading" },
+    { name: "Limitless Club Bundle", url: "bit.ly/458wzTk" },
+    { name: "Limitless App / Other", url: "bit.ly/3SVR575" }
   ];
 
   let reportMessage = "📊 *WEEKLY LINK ANALYTICS REPORT*\n\n";
@@ -21,8 +21,11 @@ async function run() {
 
   for (const link of linksToTrack) {
     try {
-      // Bitly API requires the full URL to fetch metrics
-      const response = await axios.get(`https://api-ssl.bitly.com/v4/bitlinks/${encodeURIComponent(link.url)}/clicks?unit=week&units=4`, {
+      // Bitly API v4 expects the format: /v4/bitlinks/bit.ly/xxxxx/clicks
+      const apiUrl = `https://api-ssl.bitly.com/v4/bitlinks/${link.url}/clicks?unit=week&units=4`;
+      console.log(`Fetching: ${apiUrl}`);
+      
+      const response = await axios.get(apiUrl, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -32,18 +35,13 @@ async function run() {
       const clicks = response.data.link_clicks || 0;
       totalClicks += clicks;
       
-      // Add to report
       reportMessage += `🔗 *${link.name}*\n`;
       reportMessage += `Clicks: ${clicks}\n\n`;
       
-           } catch (error) {
+    } catch (error) {
       const status = error.response ? error.response.status : 'No Response';
       const data = error.response ? error.response.data : error.message;
-      
-      // This prints the EXACT URL the script is trying to check
-      const debugUrl = `https://api-ssl.bitly.com/v4/bitlinks/${encodeURIComponent(link.url)}/clicks?unit=week&units=4`;
       console.log(`❌ ERROR for ${link.name}: Status ${status}`, JSON.stringify(data, null, 2));
-      console.log(`🔍 Script tried to fetch: ${debugUrl}`);
       
       reportMessage += `🔗 *${link.name}*\n`;
       reportMessage += `Clicks: ⚠️ Error (Status: ${status})\n\n`;
