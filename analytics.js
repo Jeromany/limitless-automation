@@ -4,6 +4,7 @@ async function run() {
   console.log("Starting Weekly Analytics Report (Short.io)...");
 
   const apiKey = process.env.SHORTIO_API_KEY;
+     console.log("🔑 API Key loaded:", apiKey ? apiKey.substring(0, 6) + "..." : "❌ MISSING!");
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const domain = "ljc.s.gy"; // Your Short.io domain
