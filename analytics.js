@@ -36,11 +36,14 @@ async function run() {
       reportMessage += `🔗 *${link.name}*\n`;
       reportMessage += `Clicks: ${clicks}\n\n`;
       
-        } catch (error) {
-      // This reveals the EXACT HTTP status code and error message from Bitly
+           } catch (error) {
       const status = error.response ? error.response.status : 'No Response';
       const data = error.response ? error.response.data : error.message;
+      
+      // This prints the EXACT URL the script is trying to check
+      const debugUrl = `https://api-ssl.bitly.com/v4/bitlinks/${encodeURIComponent(link.url)}/clicks?unit=week&units=4`;
       console.log(`❌ ERROR for ${link.name}: Status ${status}`, JSON.stringify(data, null, 2));
+      console.log(`🔍 Script tried to fetch: ${debugUrl}`);
       
       reportMessage += `🔗 *${link.name}*\n`;
       reportMessage += `Clicks: ⚠️ Error (Status: ${status})\n\n`;
