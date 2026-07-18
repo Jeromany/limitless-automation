@@ -7,13 +7,33 @@ async function run() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  // UPDATED: Use 'bit.ly/...' format (Official Bitly API v4 standard)
+    // UPDATED: Your new ljc.s.gy links AND their original Payhip destinations
   const linksToTrack = [
-    { name: "Weekly Gold Roadmap", url: "bit.ly/LJ-Roadmap" },
-    { name: "Gold Trader's Blueprint", url: "bit.ly/LJ-Blueprint" },
-    { name: "Mastering Swing Trading", url: "bit.ly/LJ-SwingTrading" },
-    { name: "Limitless Club Bundle", url: "bit.ly/458wzTk" },
-    { name: "Limitless App / Other", url: "bit.ly/3SVR575" }
+    { 
+      name: "Weekly Gold Roadmap", 
+      shortUrl: "https://ljc.s.gy/roadmap", 
+      originalUrl: "https://payhip.com/b/YOUR_ROADMAP_LINK_HERE" 
+    },
+    { 
+      name: "Gold Trader's Blueprint", 
+      shortUrl: "https://ljc.s.gy/blueprint", 
+      originalUrl: "https://payhip.com/b/YOUR_BLUEPRINT_LINK_HERE" 
+    },
+    { 
+      name: "Mastering Swing Trading", 
+      shortUrl: "https://ljc.s.gy/swing", 
+      originalUrl: "https://payhip.com/b/YOUR_SWING_LINK_HERE" 
+    },
+    { 
+      name: "Limitless Club Bundle", 
+      shortUrl: "https://ljc.s.gy/bundle", 
+      originalUrl: "https://payhip.com/b/YOUR_BUNDLE_LINK_HERE" 
+    },
+    { 
+      name: "Limitless App / Other", 
+      shortUrl: "https://ljc.s.gy/app", 
+      originalUrl: "https://payhip.com/b/YOUR_APP_LINK_HERE" 
+    }
   ];
 
   let reportMessage = "📊 *WEEKLY LINK ANALYTICS REPORT*\n\n";
