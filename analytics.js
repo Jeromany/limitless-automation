@@ -36,13 +36,14 @@ async function run() {
       reportMessage += `🔗 *${link.name}*\n`;
       reportMessage += `Clicks: ${clicks}\n\n`;
       
-    } catch (error) {
-      // This will print the exact error from Bitly to the GitHub logs
-      const bitlyError = error.response ? error.response.data : error.message;
-      console.log(`❌ Error fetching ${link.name}:`, bitlyError);
+        } catch (error) {
+      // This reveals the EXACT HTTP status code and error message from Bitly
+      const status = error.response ? error.response.status : 'No Response';
+      const data = error.response ? error.response.data : error.message;
+      console.log(`❌ ERROR for ${link.name}: Status ${status}`, JSON.stringify(data, null, 2));
       
       reportMessage += `🔗 *${link.name}*\n`;
-      reportMessage += `Clicks: ⚠️ Error (${bitlyError.description || bitlyError.message || 'Check link/token'})\n\n`;
+      reportMessage += `Clicks: ⚠️ Error (Status: ${status})\n\n`;
     }
   }
 
