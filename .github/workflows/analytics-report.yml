@@ -1,0 +1,29 @@
+name: Weekly Analytics Report
+
+on:
+  schedule:
+    # Runs every Monday at 1:00 AM UTC (Sunday 8:00 PM EST)
+    - cron: '0 1 * * 1'
+  workflow_dispatch: # Allows manual testing
+
+jobs:
+  run-analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Run Analytics Script
+        env:
+          BITLY_API_TOKEN: ${{ secrets.BITLY_API_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }} # Use your private admin chat ID here
+        run: node analytics.js
