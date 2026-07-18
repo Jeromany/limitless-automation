@@ -7,13 +7,13 @@ async function run() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  // REPLACE THESE WITH YOUR ACTUAL 5 BITLY LINKS
+  // UPDATED: Your exact 5 Bitly links
   const linksToTrack = [
-    { name: "Telegram Bundle", url: "https://bit.ly/LJ-Bundle-TG" },
-    { name: "Discord Bundle", url: "https://bit.ly/LJ-Bundle-DC" },
-    { name: "Social Media Bundle", url: "https://bit.ly/LJ-Bundle-SOCIAL" },
-    { name: "Free Roadmap", url: "https://bit.ly/LJ-Roadmap" },
-    { name: "Limitless App", url: "https://bit.ly/LJ-App" }
+    { name: "Weekly Gold Roadmap", url: "https://bit.ly/LJ-Roadmap" },
+    { name: "Gold Trader's Blueprint", url: "https://bit.ly/LJ-Blueprint" },
+    { name: "Mastering Swing Trading", url: "https://bit.ly/LJ-SwingTrading" },
+    { name: "Limitless Club Bundle", url: "https://bit.ly/458wzTk" },
+    { name: "Limitless App / Other", url: "https://bit.ly/3SVR575" }
   ];
 
   let reportMessage = "📊 *WEEKLY LINK ANALYTICS REPORT*\n\n";
@@ -37,8 +37,12 @@ async function run() {
       reportMessage += `Clicks: ${clicks}\n\n`;
       
     } catch (error) {
-      console.log(`Could not fetch data for ${link.name}. It might be a custom short link.`);
-      reportMessage += `🔗 *${link.name}*\nClicks: Data unavailable\n\n`;
+      // This will print the exact error from Bitly to the GitHub logs
+      const bitlyError = error.response ? error.response.data : error.message;
+      console.log(`❌ Error fetching ${link.name}:`, bitlyError);
+      
+      reportMessage += `🔗 *${link.name}*\n`;
+      reportMessage += `Clicks: ⚠️ Error (${bitlyError.description || bitlyError.message || 'Check link/token'})\n\n`;
     }
   }
 
