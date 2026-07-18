@@ -4,36 +4,35 @@ async function run() {
   console.log("Starting Weekly Analytics Report (Short.io)...");
 
   const apiKey = process.env.SHORTIO_API_KEY;
-     console.log("🔑 API Key loaded:", apiKey ? apiKey.substring(0, 6) + "..." : "❌ MISSING!");
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  const domain = "ljc.s.gy"; // Your Short.io domain
+  const domainName = "ljc.s.gy";
 
   // Your exact Payhip destination URLs
   const linksToTrack = [
     { 
       name: "Weekly Gold Roadmap", 
-      shortUrl: `https://${domain}/roadmap`, 
+      shortUrl: `https://${domainName}/roadmap`, 
       originalUrl: "https://payhip.com/b/9Y4Mb" 
     },
     { 
       name: "Gold Trader's Blueprint", 
-      shortUrl: `https://${domain}/blueprint`, 
+      shortUrl: `https://${domainName}/blueprint`, 
       originalUrl: "https://payhip.com/b/fteFc" 
     },
     { 
       name: "Mastering Swing Trading", 
-      shortUrl: `https://${domain}/swing`, 
+      shortUrl: `https://${domainName}/swing`, 
       originalUrl: "https://payhip.com/b/dGWiO" 
     },
     { 
       name: "Limitless Club Bundle", 
-      shortUrl: `https://${domain}/bundle`, 
+      shortUrl: `https://${domainName}/bundle`, 
       originalUrl: "https://payhip.com/b/XsFC7" 
     },
     { 
       name: "Limitless App / Other", 
-      shortUrl: `https://${domain}/app`, 
+      shortUrl: `https://${domainName}/app`, 
       originalUrl: "https://payhip.com/LimitlessJourneysClub" 
     }
   ];
@@ -42,18 +41,36 @@ async function run() {
   let totalClicks = 0;
 
   try {
-    // FIX: Added '/api/' to the URL path. The correct Short.io endpoint is /api/links
-    console.log(`Fetching data from Short.io for domain: ${domain}...`);
-    const response = await axios.get(`https://api.short.io/api/links?domain=${domain}`, {
+    // STEP 1: Get the numeric Domain ID from Short.io
+    console.log(`Fetching domain ID for: ${domainName}...`);
+    const domainResponse = await axios.get('https://api.short.io/api/domains', {
       headers: {
         "Authorization": apiKey,
-        "accept": "application/json",
-        "Content-Type": "application/json"
+        "accept": "application/json"
       }
     });
 
-    const allLinks = response.data.links || [];
-    console.log(`Found ${allLinks.length} links in Short.io account.`);
+    const domains = domainResponse.data.domains || [];
+    const targetDomain = domains.find(d => d.hostname === domainName);
+
+    if (!targetDomain) {
+      throw new Error(`Domain ${domainName} not found in your Short.io account.`);
+    }
+
+    const domainId = targetDomain.id;
+    console.log(`✅ Found domain ID: ${domainId}`);
+
+    // STEP 2: Get links using the numeric domain_id
+    console.log(`Fetching links for domain ID: ${domainId}...`);
+    const linksResponse = await axios.get(`https://api.short.io/api/links?domain_id=${domainId}`, {
+      headers: {
+        "Authorization": apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    const allLinks = linksResponse.data.links || [];
+    console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
 
     for (const target of linksToTrack) {
       // Find the matching short link by comparing originalUrl
