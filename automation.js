@@ -9,6 +9,7 @@ async function run() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const makeWebhook = process.env.MAKE_WEBHOOK_URL;
+  const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
 
   const currentTime = new Date().getTime();
   console.log("Fetching Gold data...");
@@ -112,6 +113,18 @@ async function run() {
     });
   }
 
+  // Send to Discord (if webhook is provided)
+  if (discordWebhook && discordWebhook !== 'none' && discordWebhook !== undefined) {
+    console.log("Sending to Discord...");
+    await axios.post(discordWebhook, {
+      content: finalMessage,
+      embeds: [{
+        image: { url: finalImageUrl },
+        color: 16766720 // Gold color in decimal
+      }]
+    });
+  }
+
   console.log("✅ Automation completed successfully!");
 }
 
@@ -124,18 +137,6 @@ function calculateEMA(data, period) {
   return ema;
 }
 
-  // 10. Send to Discord (if webhook is provided)
-  const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
-  if (discordWebhook && discordWebhook !== 'none') {
-    console.log("Sending to Discord...");
-    await axios.post(discordWebhook, {
-      content: finalMessage,
-      embeds: [{
-        image: { url: finalImageUrl },
-        color: 16766720 // Gold color in decimal
-      }]
-    });
-  }
 run().catch(err => {
   console.error("❌ Error:", err.message);
   process.exit(1);
