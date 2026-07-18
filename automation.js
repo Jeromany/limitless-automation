@@ -123,6 +123,7 @@ function calculateEMA(data, period) {
   }
   return ema;
 }
+
   // 10. Send to Discord (if webhook is provided)
   const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
   if (discordWebhook && discordWebhook !== 'none') {
