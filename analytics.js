@@ -6,7 +6,7 @@ async function run() {
   const apiKey = process.env.SHORTIO_API_KEY;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  const domainName = "ljc.s.gy"; // We will update this once we see the real name
+  const domainName = "ljc.s.gy"; 
 
   // Your exact Payhip destination URLs
   const linksToTrack = [
@@ -49,16 +49,17 @@ async function run() {
         "accept": "application/json"
       }
     });
-
-    const domains = domainResponse.data.domains || [];
     
-    // DEBUG: Print out EVERY domain this API key can see
-    console.log("🔍 DOMAINS FOUND IN THIS ACCOUNT:", domains.map(d => d.hostname));
+    // DEBUG: Print the ENTIRE raw response from Short.io to see what's really happening
+    console.log("🔍 RAW SHORT.IO RESPONSE:", JSON.stringify(domainResponse.data, null, 2));
+    
+    const domains = domainResponse.data.domains || [];
+    console.log("🔍 DOMAINS FOUND:", domains.map(d => d.hostname));
 
     const targetDomain = domains.find(d => d.hostname === domainName);
 
     if (!targetDomain) {
-      throw new Error(`Domain '${domainName}' not found. Please check the 'DOMAINS FOUND' list in the logs above and update the 'domainName' variable in the code.`);
+      throw new Error(`Domain '${domainName}' not found. Please check the 'RAW SHORT.IO RESPONSE' in the logs above.`);
     }
 
     const domainId = targetDomain.id;
