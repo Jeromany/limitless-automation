@@ -123,7 +123,18 @@ function calculateEMA(data, period) {
   }
   return ema;
 }
-
+  // 10. Send to Discord (if webhook is provided)
+  const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
+  if (discordWebhook && discordWebhook !== 'none') {
+    console.log("Sending to Discord...");
+    await axios.post(discordWebhook, {
+      content: finalMessage,
+      embeds: [{
+        image: { url: finalImageUrl },
+        color: 16766720 // Gold color in decimal
+      }]
+    });
+  }
 run().catch(err => {
   console.error("❌ Error:", err.message);
   process.exit(1);
