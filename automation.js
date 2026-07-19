@@ -125,6 +125,41 @@ async function run() {
     });
   }
 
+    // 11. Update the Mini App's briefing.json file with today's data
+  console.log("Updating Mini App briefing.json...");
+  const githubToken = process.env.GITHUB_TOKEN;
+  const appRepo = "Jeromany/limitless-club-app";
+  const filePath = "briefing.json";
+  
+  const briefingData = {
+    date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+    price: currentPrice.toFixed(2),
+    change: `${changeSign}${priceChangePercent}%`,
+    analysis: aiAnalysis,
+    action: `Watch for a reaction at the 61.8% Fib level ($${fib618}) during the NY session. Bias remains neutral until a clean break of the Asian Session range.`,
+    chartUrl: finalImageUrl
+  };
+
+  try {
+    // Get the current file's SHA (required by GitHub API to update)
+    const fileResponse = await axios.get(`https://api.github.com/repos/${appRepo}/contents/${filePath}`, {
+      headers: { "Authorization": `token ${githubToken}`, "Accept": "application/vnd.github.v3+json" }
+    });
+    const sha = fileResponse.data.sha;
+
+    // Update the file with new content
+    const contentBase64 = Buffer.from(JSON.stringify(briefingData, null, 2)).toString('base64');
+    await axios.put(`https://api.github.com/repos/${appRepo}/contents/${filePath}`, {
+      message: `Daily briefing update: ${briefingData.date}`,
+      content: contentBase64,
+      sha: sha
+    }, {
+      headers: { "Authorization": `token ${githubToken}`, "Accept": "application/vnd.github.v3+json" }
+    });
+    console.log("✅ Mini App briefing.json updated successfully!");
+  } catch (err) {
+    console.log("⚠️ Could not update Mini App briefing:", err.response ? err.response.data.message : err.message);
+  }
   console.log("✅ Automation completed successfully!");
 }
 
