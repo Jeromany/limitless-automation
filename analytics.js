@@ -53,8 +53,9 @@ async function run() {
     // DEBUG: Print the ENTIRE raw response from Short.io to see what's really happening
     console.log("🔍 RAW SHORT.IO RESPONSE:", JSON.stringify(domainResponse.data, null, 2));
     
-    const domains = domainResponse.data.domains || [];
-    console.log("🔍 DOMAINS FOUND:", domains.map(d => d.hostname));
+       // FIX: Short.io returns an array directly, not an object with a 'domains' key
+   const domains = Array.isArray(domainResponse.data) ? domainResponse.data : (domainResponse.data.domains || []);
+   console.log("🔍 DOMAINS FOUND:", domains.map(d => d.hostname));
 
     const targetDomain = domains.find(d => d.hostname === domainName);
 
