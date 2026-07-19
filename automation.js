@@ -8,6 +8,7 @@ async function run() {
   const logoPublicId = process.env.CLOUDINARY_LOGO_ID;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
+  const githubToken = process.env.GITHUB_TOKEN;
   const makeWebhook = process.env.MAKE_WEBHOOK_URL;
   const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
 
