@@ -75,8 +75,11 @@ async function run() {
       }
     });
 
-    const allLinks = linksResponse.data.links || [];
-    console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
+       const allLinks = linksResponse.data.links || [];
+   console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
+   
+   // DEBUG: Print the exact originalUrl and shortURL of the first 3 links Short.io sees
+   console.log("🔍 FIRST 3 LINKS IN SHORT.IO:", allLinks.slice(0, 3).map(l => ({ short: l.shortURL, original: l.originalUrl })));
 
     for (const target of linksToTrack) {
       const matchedLink = allLinks.find(l => l.originalUrl === target.originalUrl);
