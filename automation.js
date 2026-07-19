@@ -8,9 +8,9 @@ async function run() {
   const logoPublicId = process.env.CLOUDINARY_LOGO_ID;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  const githubToken = process.env.GITHUB_TOKEN;
   const makeWebhook = process.env.MAKE_WEBHOOK_URL;
   const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
+  const githubToken = process.env.GITHUB_TOKEN; // FIX: Only declared once here at the top
 
   const currentTime = new Date().getTime();
   console.log("Fetching Gold data...");
@@ -114,21 +114,19 @@ async function run() {
     });
   }
 
-  // Send to Discord (if webhook is provided)
   if (discordWebhook && discordWebhook !== 'none' && discordWebhook !== undefined) {
     console.log("Sending to Discord...");
     await axios.post(discordWebhook, {
       content: finalMessage,
       embeds: [{
         image: { url: finalImageUrl },
-        color: 16766720 // Gold color in decimal
+        color: 16766720
       }]
     });
   }
 
-    // 11. Update the Mini App's briefing.json file with today's data
+  // 11. Update the Mini App's briefing.json file with today's data
   console.log("Updating Mini App briefing.json...");
-  const githubToken = process.env.GITHUB_TOKEN;
   const appRepo = "Jeromany/limitless-club-app";
   const filePath = "briefing.json";
   
@@ -142,13 +140,11 @@ async function run() {
   };
 
   try {
-    // Get the current file's SHA (required by GitHub API to update)
     const fileResponse = await axios.get(`https://api.github.com/repos/${appRepo}/contents/${filePath}`, {
       headers: { "Authorization": `token ${githubToken}`, "Accept": "application/vnd.github.v3+json" }
     });
     const sha = fileResponse.data.sha;
 
-    // Update the file with new content
     const contentBase64 = Buffer.from(JSON.stringify(briefingData, null, 2)).toString('base64');
     await axios.put(`https://api.github.com/repos/${appRepo}/contents/${filePath}`, {
       message: `Daily briefing update: ${briefingData.date}`,
@@ -161,6 +157,7 @@ async function run() {
   } catch (err) {
     console.log("⚠️ Could not update Mini App briefing:", err.response ? err.response.data.message : err.message);
   }
+
   console.log("✅ Automation completed successfully!");
 }
 
