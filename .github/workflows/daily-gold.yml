@@ -31,4 +31,5 @@ jobs:
           CLOUDINARY_LOGO_ID: ${{ secrets.CLOUDINARY_LOGO_ID }}
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node automation.js
