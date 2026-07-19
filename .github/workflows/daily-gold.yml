@@ -5,9 +5,11 @@ on:
     - cron: '0 12 * * *'
   workflow_dispatch:
 
+# FIX: permissions goes at the TOP LEVEL, not under jobs
+permissions:
+  contents: write
+
 jobs:
-   permissions:
-     contents: write
   run-automation:
     runs-on: ubuntu-latest
     steps:
