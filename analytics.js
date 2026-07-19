@@ -8,26 +8,26 @@ async function run() {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const domainName = "ljc.s.gy"; 
 
-  // Your exact Payhip destination URLs
+  // Your exact Payhip destination URLs and corrected short paths
   const linksToTrack = [
     { 
       name: "Weekly Gold Roadmap", 
-      shortUrl: `https://${domainName}/roadmap`, 
+      shortUrl: `https://${domainName}/goldroadmap`, 
       originalUrl: "https://payhip.com/b/9Y4Mb" 
     },
     { 
       name: "Gold Trader's Blueprint", 
-      shortUrl: `https://${domainName}/blueprint`, 
+      shortUrl: `https://${domainName}/goldtradersblueprint`, 
       originalUrl: "https://payhip.com/b/fteFc" 
     },
     { 
       name: "Mastering Swing Trading", 
-      shortUrl: `https://${domainName}/swing`, 
+      shortUrl: `https://${domainName}/masteringswingtrading`, 
       originalUrl: "https://payhip.com/b/dGWiO" 
     },
     { 
       name: "Limitless Club Bundle", 
-      shortUrl: `https://${domainName}/bundle`, 
+      shortUrl: `https://${domainName}/limitlessbundle`, 
       originalUrl: "https://payhip.com/b/XsFC7" 
     },
     { 
@@ -50,17 +50,11 @@ async function run() {
       }
     });
     
-    // DEBUG: Print the ENTIRE raw response from Short.io to see what's really happening
-    console.log("🔍 RAW SHORT.IO RESPONSE:", JSON.stringify(domainResponse.data, null, 2));
-    
-       // FIX: Short.io returns an array directly, not an object with a 'domains' key
-   const domains = Array.isArray(domainResponse.data) ? domainResponse.data : (domainResponse.data.domains || []);
-   console.log("🔍 DOMAINS FOUND:", domains.map(d => d.hostname));
-
+    const domains = Array.isArray(domainResponse.data) ? domainResponse.data : (domainResponse.data.domains || []);
     const targetDomain = domains.find(d => d.hostname === domainName);
 
     if (!targetDomain) {
-      throw new Error(`Domain '${domainName}' not found. Please check the 'RAW SHORT.IO RESPONSE' in the logs above.`);
+      throw new Error(`Domain '${domainName}' not found.`);
     }
 
     const domainId = targetDomain.id;
@@ -75,16 +69,12 @@ async function run() {
       }
     });
 
-       const allLinks = linksResponse.data.links || [];
-console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
-
-// DEBUG: Print the ENTIRE first link object to see the EXACT property name Short.io uses
-if (allLinks.length > 0) {
-  console.log("🔍 EXACT SHORT.IO LINK DATA:", JSON.stringify(allLinks[0], null, 2));
-}
+    const allLinks = linksResponse.data.links || [];
+    console.log(`✅ Found ${allLinks.length} links in Short.io account.`);
 
     for (const target of linksToTrack) {
-      const matchedLink = allLinks.find(l => l.originalUrl === target.originalUrl);
+      // THE FINAL FIX: Changed 'originalUrl' to 'originalURL' (capital URL) to match Short.io exactly
+      const matchedLink = allLinks.find(l => l.originalURL === target.originalUrl);
       
       if (matchedLink) {
         const clicks = matchedLink.clicks || 0;
@@ -94,7 +84,7 @@ if (allLinks.length > 0) {
         reportMessage += `Link: ${matchedLink.shortURL}\n\n`;
       } else {
         reportMessage += `🔗 *${target.name}*\n`;
-        reportMessage += `Clicks: ⚠️ Link not found (Check Short.io setup)\n\n`;
+        reportMessage += `Clicks: ⚠️ Link not found (Check Payhip URL match)\n\n`;
       }
     }
 
