@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
+   permissions:
+     contents: write
   run-automation:
     runs-on: ubuntu-latest
     steps:
