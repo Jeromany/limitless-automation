@@ -10,7 +10,7 @@ async function run() {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const makeWebhook = process.env.MAKE_WEBHOOK_URL;
   const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
-  const githubToken = process.env.GITHUB_TOKEN; // FIX: Only declared once here at the top
+  const githubToken = process.env.APP_UPDATE_TOKEN; // FIX: Only declared once here at the top
 
   const currentTime = new Date().getTime();
   console.log("Fetching Gold data...");
