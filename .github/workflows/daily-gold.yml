@@ -1,9 +1,7 @@
 name: Daily Gold Automation
 
 on:
-  schedule:
-    - cron: '0 12 * * *' # Runs at 8:00 AM EST
-  workflow_dispatch: # Allows manual testing
+  workflow_dispatch:
 
 permissions:
   contents: write
