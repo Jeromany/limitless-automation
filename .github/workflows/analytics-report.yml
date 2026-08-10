@@ -25,5 +25,5 @@ jobs:
         env:
           SHORTIO_API_KEY: ${{ secrets.SHORTIO_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID_PRIVATE }}
         run: node analytics.js
