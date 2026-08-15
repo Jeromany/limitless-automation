@@ -34,17 +34,20 @@ def groq_chat(messages, temperature=0.7):
     return r.json()["choices"][0]["message"]["content"].strip()
 
 def write_script(gold):
+    tactical = gold.get('tacticalBias', 'neutral')
     prompt = f"""
 You are Jasai, an institutional gold analyst, recording a 60-second vertical YouTube Short.
-Today's data: price ${gold['currentPrice']} ({gold['priceChangePercent']}% today), bias {gold['bias']},
+Today's data: price ${gold['currentPrice']} ({gold['priceChangePercent']}% today).
+MACRO bias: {gold['bias']} (the long-term structural thesis).
+TACTICAL bias: {tactical} (the short-term momentum based on EMAs).
 support ${gold['support']}, resistance ${gold['resistance']}, 61.8 fib ${gold['fib618']}.
-Analysis: {gold['analysis']}
+Full Analysis: {gold['analysis']}
 
 Write the voiceover script (140-150 words, about 55 seconds spoken).
 RULES:
 - Write ALL numbers in spoken word form, rounded (example: "four thousand three hundred eighty dollars", never "$4,380.00").
 - No symbols, no decimals, no emojis.
-- Structure: one-line hook, price and bias, one key level to watch, one risk warning, sign-off "Follow for tomorrow's update."
+- Structure: Hook the listener by contrasting the Macro thesis with the Tactical momentum, give the current price, name one key level to watch, warn of the risk, sign-off "Follow for tomorrow's update."
 - Sound like a calm institutional trader. Return ONLY the script text.
 """
     return groq_chat([{"role": "user", "content": prompt}])
