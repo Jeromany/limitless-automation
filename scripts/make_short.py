@@ -9,7 +9,7 @@ LOGO_URL = "https://raw.githubusercontent.com/jeromany/limitless-club-app/main/l
 
 GROQ_KEY = os.environ.get("GROQ_API_KEY", "")
 ELEVEN_KEY = os.environ.get("ELEVENLABS_API_KEY", "")
-ELEVEN_VOICE = os.environ.get("ELEVEN_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
+ELEVEN_VOICE = os.environ.get("ELEVEN_VOICE_ID", "ktmJWjF5IjAfHmslWEWY")
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID_PRIVATE", "")
 
